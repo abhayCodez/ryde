@@ -8,7 +8,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +26,7 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         claims.put("ver", user.getTokenVersion());
         claims.put("roles", user.getRoles());
+        claims.put("userId", user.getId());
 
         return Jwts
                 .builder()
@@ -40,6 +40,15 @@ public class JwtService {
 
     private Key signinKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            Claims claims = extractClaims(token);
+            return claims.getExpiration().after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private Claims extractClaims(String token){
@@ -58,4 +67,7 @@ public class JwtService {
         return extractClaims(token).get("ver", Integer.class);
     }
 
+    public Long extractUserId(String token){
+        return extractClaims(token).get("userId", Long.class);
+    }
 }
