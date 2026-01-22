@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: realtimeservice
+
+application:
+  security:
+    jwt:
+      secret-key: U9gdFO7BiIYHfohZHgbkkPE5OFoOC93k9GMpNqYk450
+
+server:
+  port: 8083

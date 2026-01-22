@@ -1,6 +1,6 @@
-package com.ryde.profileservice.filter;
+package com.ryde.realtimeservice.filter;
 
-import com.ryde.profileservice.service.JwtService;
+import com.ryde.realtimeservice.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +41,7 @@ public class JwtFilter extends OncePerRequestFilter {
         Long userId = jwtService.extractUserId(token);
         List<String> roles = jwtService.extractRoles(token);
         List<SimpleGrantedAuthority> authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_"+role))
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .toList();
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(

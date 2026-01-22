@@ -1,12 +1,12 @@
 package com.ryde.profileservice.client;
 
+import com.ryde.profileservice.dto.TokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 @Component
 public class AuthServiceClient {
@@ -23,17 +23,17 @@ public class AuthServiceClient {
                 .build();
     }
 
-    public void upgradeToDriver(Long userId) {
-        webClient.patch()
+    public TokenResponse upgradeToDriver(Long userId) {
+        return webClient.patch()
                 .uri("/internal/users/{id}/upgrade-to-driver", userId)
-                .bodyValue(Map.of("role", "DRIVER"))
+                .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, resp ->
                         resp.bodyToMono(String.class)
                                 .flatMap(body -> Mono.error(
                                         new RuntimeException("Auth-service failed: " + body)))
                 )
-                .toBodilessEntity()
+                .bodyToMono(TokenResponse.class)
                 .block();
     }
 }

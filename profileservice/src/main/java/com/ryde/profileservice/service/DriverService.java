@@ -1,28 +1,27 @@
 package com.ryde.profileservice.service;
 
 import com.ryde.profileservice.client.AuthServiceClient;
+import com.ryde.profileservice.dto.DriverProfileResponse;
+import com.ryde.profileservice.dto.TokenResponse;
+import com.ryde.profileservice.dto.VehicleResponse;
 import com.ryde.profileservice.model.Driver;
 import com.ryde.profileservice.model.Vehicle;
 import com.ryde.profileservice.repository.DriverRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DriverService {
 
     private final DriverRepository repository;
     private final AuthServiceClient authClient;
 
-    public Driver updateAvailability(Long userId, boolean available) {
-        Driver driver = repository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Driver not found"));
-
-        driver.setIsAvailable(available);
-        return repository.save(driver);
-    }
-
-    public void addLicense(Long userId, String license) {
+    public TokenResponse addLicense(Long userId, String license) {
         Driver driver = repository.findByUserId(userId)
                 .orElseGet(() -> {
                     Driver d = new Driver();
@@ -32,26 +31,56 @@ public class DriverService {
 
         driver.setLicenseNumber(license);
         repository.save(driver);
-        checkAndUpgrade(driver);
+        Driver fresh = repository.findByUserId(userId)
+                .orElseThrow();
+        return checkAndUpgrade(fresh);
     }
 
-    public void addVehicle(Long userId, Vehicle vehicle) {
+    public TokenResponse addVehicle(Long userId, Vehicle vehicle) {
         Driver driver = repository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Driver not found"));
+                .orElseGet(() -> {
+                    Driver d = new Driver();
+                    d.setUserId(userId);
+                    return d;
+                });
 
         vehicle.setDriver(driver);
         driver.getVehicles().add(vehicle);
         repository.save(driver);
-        checkAndUpgrade(driver);
+        Driver fresh = repository.findWithVehiclesByUserId(userId)
+                .orElseThrow();
+        return checkAndUpgrade(fresh);
     }
 
-    private void checkAndUpgrade(Driver driver) {
+    private TokenResponse checkAndUpgrade(Driver driver) {
         if (driver.isEligible()) {
             try {
-                authClient.upgradeToDriver(driver.getUserId());
+                System.out.println("Calling auth-service for userId = " + driver.getUserId());
+
+                TokenResponse token = authClient.upgradeToDriver(driver.getUserId());
+
+                System.out.println("Token received = " + token);
+
+                return token;
             } catch (Exception e) {
+                e.printStackTrace(); // IMPORTANT
                 throw new RuntimeException("Failed to upgrade role in auth-service");
             }
         }
+        return null;
+    }
+
+    public DriverProfileResponse getDriverProfile(Long userId) {
+        Driver driver = repository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Driver profile not found"));
+        List<VehicleResponse> vehicles = driver.getVehicles()
+                .stream()
+                .map(v -> new VehicleResponse(v.getId(), v.getModel()))
+                .toList();
+        return new DriverProfileResponse(
+                driver.getUserId(),
+                driver.getLicenseNumber(),
+                vehicles
+        );
     }
 }

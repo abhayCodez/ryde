@@ -1,6 +1,5 @@
 package com.ryde.profileservice.service;
 
-import com.ryde.profileservice.dto.UpdateRiderRequest;
 import com.ryde.profileservice.model.Rider;
 import com.ryde.profileservice.repository.RiderRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +23,4 @@ public class RiderService {
         }
         return rider.get();
     }
-
-    public Rider updateRider(Long userId, UpdateRiderRequest req) {
-        Rider rider = getRider(userId);
-        rider.setLatitude(req.getLatitude());
-        rider.setLongitude(req.getLongitude());
-        return repository.save(rider);
-    }
-
 }

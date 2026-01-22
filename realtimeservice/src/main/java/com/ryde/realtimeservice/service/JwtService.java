@@ -1,4 +1,4 @@
-package com.ryde.profileservice.service;
+package com.ryde.realtimeservice.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -25,7 +25,6 @@ public class Driver {
     @Column(nullable = false, unique = true)
     private Long userId;
     private String licenseNumber;
-    private Boolean isAvailable = false;
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
     private List<Vehicle> vehicles = new ArrayList<>();
     @CreationTimestamp

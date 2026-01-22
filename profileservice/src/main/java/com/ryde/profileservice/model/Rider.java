@@ -22,8 +22,6 @@ public class Rider {
     private Long id;
     @Column(nullable = false, unique = true)
     private Long userId;
-    private Double latitude;
-    private Double longitude;
     @CreationTimestamp
     private LocalDateTime createdAt;
 }

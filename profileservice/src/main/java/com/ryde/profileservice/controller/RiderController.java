@@ -1,6 +1,5 @@
 package com.ryde.profileservice.controller;
 
-import com.ryde.profileservice.dto.UpdateRiderRequest;
 import com.ryde.profileservice.model.Rider;
 import com.ryde.profileservice.service.RiderService;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +16,8 @@ public class RiderController {
 
     @GetMapping("/me")
     public ResponseEntity<?> me(Authentication auth) {
-        Long userId = Long.parseLong(auth.getName());
+        Long userId = (Long) auth.getPrincipal();
         Rider rider = service.getRider(userId);
         return ResponseEntity.ok(rider);
-    }
-
-    @PutMapping("/me")
-    public ResponseEntity<?> update(Authentication auth,
-                                    @RequestBody UpdateRiderRequest request) {
-        Long userId = Long.parseLong(auth.getName());
-        Rider updated = service.updateRider(userId, request);
-        return ResponseEntity.ok(updated);
     }
 }

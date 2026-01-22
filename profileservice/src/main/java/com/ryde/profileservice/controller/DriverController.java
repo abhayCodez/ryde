@@ -1,6 +1,7 @@
 package com.ryde.profileservice.controller;
 
-import com.ryde.profileservice.model.Driver;
+import com.ryde.profileservice.dto.DriverProfileResponse;
+import com.ryde.profileservice.dto.TokenResponse;
 import com.ryde.profileservice.model.Vehicle;
 import com.ryde.profileservice.service.DriverService;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,14 @@ public class DriverController {
     public ResponseEntity<?> addLicense(Authentication auth,
                                         @RequestBody Map<String, String> body) {
         try {
-            Long userId = Long.parseLong(auth.getName());
-            service.addLicense(userId, body.get("license"));
+            Long userId = (Long) auth.getPrincipal();
+            TokenResponse token = service.addLicense(userId, body.get("license"));
+            if(token != null){
+                return ResponseEntity.ok(Map.of(
+                        "message", "License added and role upgraded to driver",
+                        "new access token", token.getNewAccessToken()
+                ));
+            }
             return ResponseEntity.ok(Map.of("message", "License added successfully"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -33,23 +40,25 @@ public class DriverController {
     public ResponseEntity<?> addVehicle(Authentication auth,
                                         @RequestBody Vehicle vehicle) {
         try {
-            Long userId = Long.parseLong(auth.getName());
-            service.addVehicle(userId, vehicle);
+            Long userId = (Long) auth.getPrincipal();
+            TokenResponse token = service.addVehicle(userId, vehicle);
+            if(token != null){
+                return ResponseEntity.ok(Map.of(
+                        "message", "Vehicle added and role upgraded to driver",
+                        "new access token", token.getNewAccessToken()
+                ));
+            }
             return ResponseEntity.ok(Map.of("message", "Vehicle added successfully"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
-    @PutMapping("/availability")
-    public ResponseEntity<?> availability(Authentication auth,
-                                          @RequestParam boolean available) {
-        try {
-            Long userId = Long.parseLong(auth.getName());
-            Driver updated = service.updateAvailability(userId, available);
-            return ResponseEntity.ok(updated);
-        } catch (Exception e) {
-            return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
-        }
+    @GetMapping("/me")
+    public ResponseEntity<DriverProfileResponse> getMyProfile(Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
+        return ResponseEntity.ok(
+                service.getDriverProfile(userId)
+        );
     }
 }
