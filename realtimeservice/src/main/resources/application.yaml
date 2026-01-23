@@ -9,3 +9,6 @@ application:
 
 server:
   port: 8083
+
+internal:
+  key: FDpj4KY40OdYE2JKabJxWtzyaGWQnmqGchuyewARfPj

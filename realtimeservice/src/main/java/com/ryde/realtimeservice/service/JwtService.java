@@ -2,6 +2,7 @@ package com.ryde.realtimeservice.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ public class JwtService {
     private String secretKey;
 
     private Key signinKey() {
-        return Keys.hmacShaKeyFor(secretKey.getBytes());
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     private Claims extractClaims(String token){
@@ -46,7 +48,12 @@ public class JwtService {
     }
 
     public List<String> extractRoles(String token) {
-        Claims claims = extractClaims(token);
-        return claims.get("roles", List.class);
+        Object roles = extractClaims(token).get("roles");
+        if (roles instanceof List<?> list) {
+            return list.stream()
+                    .map(String::valueOf)
+                    .toList();
+        }
+        return List.of();
     }
 }

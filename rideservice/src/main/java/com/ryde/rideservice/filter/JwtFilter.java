@@ -1,6 +1,6 @@
-package com.ryde.realtimeservice.filter;
+package com.ryde.rideservice.filter;
 
-import com.ryde.realtimeservice.service.JwtService;
+import com.ryde.rideservice.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,10 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
         Long userId = jwtService.extractUserId(token);
         List<String> roles = jwtService.extractRoles(token);
         List<SimpleGrantedAuthority> authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .map(role -> new SimpleGrantedAuthority("ROLE_"+role))
                 .toList();
-        System.out.println("Roles from token = " + roles);
-        System.out.println("Authorities = " + authorities);
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
                         userId,
@@ -53,6 +51,5 @@ public class JwtFilter extends OncePerRequestFilter {
                 );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         filterChain.doFilter(request, response);
-        System.out.println("FILTER END");
     }
 }

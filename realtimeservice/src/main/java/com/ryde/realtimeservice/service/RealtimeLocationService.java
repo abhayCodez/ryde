@@ -45,17 +45,17 @@ public class RealtimeLocationService {
         );
     }
 
-    public List<NearbyDriverResponse> findNearbyDrivers(double latitude, double longitude, double radiusKm) {
+    public List<NearbyDriverResponse> findNearbyDrivers(double latitude, double longitude) {
 
         Circle circle = new Circle(new Point(longitude, latitude),
-                new Distance(radiusKm, Metrics.KILOMETERS));
+                new Distance(5, Metrics.KILOMETERS));
 
         GeoResults<RedisGeoCommands.GeoLocation<String>> results =
                 redis.opsForGeo()
                         .search(
                                 DRIVER_GEO,
                                 GeoReference.fromCircle(circle),
-                                new Distance(radiusKm, Metrics.KILOMETERS),
+                                new Distance(5, Metrics.KILOMETERS),
                                 RedisGeoCommands.GeoSearchCommandArgs.newGeoSearchArgs()
                                         .includeDistance()
                                         .sortAscending()

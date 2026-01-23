@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: rideservice
+
+server:
+  port: 8084
+
+realtime:
+  service:
+    url: http://localhost:8083
+
+internal:
+  key: FDpj4KY40OdYE2JKabJxWtzyaGWQnmqGchuyewARfPj

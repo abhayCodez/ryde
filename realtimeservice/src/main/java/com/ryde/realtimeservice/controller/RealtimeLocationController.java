@@ -31,6 +31,7 @@ public class RealtimeLocationController {
     @PostMapping("/drivers/online")
     @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<?> driverOnline(Authentication auth) {
+        System.out.println("CONTROLLER HIT");
         Long userId = (Long) auth.getPrincipal();
         DriverStatus status = service.driverOnline(userId);
         return switch (status) {
@@ -67,16 +68,6 @@ public class RealtimeLocationController {
                         "message", "Location updated"
                 )
         );
-    }
-
-    @GetMapping("/drivers/nearby")
-    @PreAuthorize("hasRole('RIDER')")
-    public ResponseEntity<List<NearbyDriverResponse>> findNearbyDrivers(
-            @RequestParam @DecimalMin("-90.0") @DecimalMax("90.0") double lat,
-            @RequestParam @DecimalMin("-180.0") @DecimalMax("180.0") double lng,
-            @RequestParam @Positive double radiusKm
-    ) {
-        return ResponseEntity.ok(service.findNearbyDrivers(lat, lng, radiusKm));
     }
 
     @PostMapping("/riders/location")

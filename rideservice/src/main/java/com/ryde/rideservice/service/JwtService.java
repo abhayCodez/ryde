@@ -1,16 +1,15 @@
-package com.ryde.authservice.service;
+package com.ryde.rideservice.service;
 
-import com.ryde.authservice.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class JwtService {
@@ -18,31 +17,17 @@ public class JwtService {
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
 
-    @Value("${application.security.jwt.access-token-expiration}")
-    private long accessTokenExpire;
-
-    public String generateAccessToken(User user){
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("ver", user.getTokenVersion());
-        claims.put("roles", user.getRoles()
-                .stream()
-                .map(Enum::name)
-                .toList());
-        claims.put("userId", user.getId());
-
-        return Jwts
-                .builder()
-                .setClaims(claims)
-                .subject(user.getEmail())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpire))
-                .signWith(signinKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
     private Key signinKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private Claims extractClaims(String token){
+        return Jwts.parser()
+                .setSigningKey(signinKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public boolean isTokenValid(String token) {
@@ -54,20 +39,8 @@ public class JwtService {
         }
     }
 
-    private Claims extractClaims(String token){
-        return Jwts.parser()
-                .setSigningKey(signinKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
     public String extractUsername(String token) {
         return extractClaims(token).getSubject();
-    }
-
-    public int extractTokenVersion(String token) {
-        return extractClaims(token).get("ver", Integer.class);
     }
 
     public Long extractUserId(String token){
@@ -83,5 +56,4 @@ public class JwtService {
         }
         return List.of();
     }
-
 }
