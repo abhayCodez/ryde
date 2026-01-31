@@ -1,6 +1,7 @@
 package com.ryde.rideservice.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "rides")
 @Data
+@Builder
 public class Ride {
 
     @Id

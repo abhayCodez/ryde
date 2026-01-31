@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: notificationservice
+  main:
+    web-application-type: reactive
+
+server:
+  port: 8085
+
+application:
+  security:
+    jwt:
+      secret-key: U9gdFO7BiIYHfohZHgbkkPE5OFoOC93k9GMpNqYk450
+
+internal:
+  key: FDpj4KY40OdYE2JKabJxWtzyaGWQnmqGchuyewARfPj

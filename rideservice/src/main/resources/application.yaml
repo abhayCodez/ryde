@@ -9,5 +9,9 @@ realtime:
   service:
     url: http://localhost:8083
 
+notification:
+  service:
+    url: http://localhost:8085
+
 internal:
   key: FDpj4KY40OdYE2JKabJxWtzyaGWQnmqGchuyewARfPj
