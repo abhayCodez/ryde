@@ -1,8 +1,8 @@
 package com.ryde.notificationservice.filter;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import reactor.util.annotation.Nullable;
 
 import java.util.List;
 

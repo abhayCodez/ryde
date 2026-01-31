@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 🔥 SPRING BOOT PARENT (handles plugins + defaults) -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+        <relativePath/>
+    </parent>
+
+    <!-- ===== PROJECT IDENTITY ===== -->
+    <groupId>com.ryde</groupId>
+    <artifactId>ryde</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>ryde</name>
+    <description>Parent pom for Ryde microservices</description>
+
+    <!-- ===== MODULE ORDER (INTELLIJ + MAVEN FOLLOW THIS) ===== -->
+    <modules>
+        <module>authservice</module>
+        <module>profileservice</module>
+        <module>realtimeservice</module>
+        <module>rideservice</module>
+        <module>notificationservice</module>
+    </modules>
+
+    <!-- ===== GLOBAL PROPERTIES ===== -->
+    <properties>
+        <java.version>21</java.version>
+        <spring.cloud.version>2023.0.1</spring.cloud.version>
+    </properties>
+
+    <!-- ===== SPRING CLOUD VERSION ALIGNMENT ===== -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

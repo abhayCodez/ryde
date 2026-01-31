@@ -1,6 +1,25 @@
 spring:
   application:
     name: rideservice
+  datasource:
+    url: jdbc:mysql://localhost:3306/ride_db
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  database: mysql
+  database-platform: org.hibernate.dialect.MySQL8Dialect
+
+application:
+  security:
+    jwt:
+      secret-key: U9gdFO7BiIYHfohZHgbkkPE5OFoOC93k9GMpNqYk450
 
 server:
   port: 8084
