@@ -34,7 +34,7 @@ public class RideService {
         repository.save(ride);
         List<NearbyDriverResponse> drivers = client.getNearbyDrivers(request.getPickupLat(), request.getPickupLng());
         if (drivers == null || drivers.isEmpty()) {
-            return new RideResponse(ride.getId(), ride.getStatus(), null);
+            return new RideResponse(ride.getId(), ride.getStatus(), null, null);
         }
         RideQuote quote = orchestrator.buildRideQuote(request, drivers.size()<20);
         for (NearbyDriverResponse driver: drivers){
@@ -47,14 +47,7 @@ public class RideService {
                     .distanceInKm(quote.getDistance().getDistanceInKm())
                     .build());
         }
-//        ride.setDriverId(assignedDriver);
-//        ride.setStatus(RideStatus.DRIVER_ASSIGNED);
-//        repository.save(ride);
-//        return new RideResponse(
-//                riderId,
-//                ride.getStatus(),
-//                assignedDriver
-//        );
-        return null;
+        // TODO: set driverId and move to DRIVER_ASSIGNED once a driver accepts the request.
+        return new RideResponse(ride.getId(), ride.getStatus(), null, quote);
     }
 }

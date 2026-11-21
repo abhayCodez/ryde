@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RideResponse {
-    private Long userId;
+    private Long rideId;
     private RideStatus status;
     private Long driverId;
+    private RideQuote quote;
 }
