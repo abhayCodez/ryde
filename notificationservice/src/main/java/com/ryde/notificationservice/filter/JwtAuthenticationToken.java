@@ -9,12 +9,12 @@ import java.util.List;
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
     private final Long userId;
-    private final String role;
 
-    public JwtAuthenticationToken(Long userId, String role) {
-        super(List.of(new SimpleGrantedAuthority("ROLE_" + role)));
+    public JwtAuthenticationToken(Long userId, List<String> roles) {
+        super(roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                .toList());
         this.userId = userId;
-        this.role = role;
         setAuthenticated(true);
     }
 

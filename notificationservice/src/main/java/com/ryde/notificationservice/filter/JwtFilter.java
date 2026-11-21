@@ -12,6 +12,8 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 @Component
 public class JwtFilter implements WebFilter {
 
@@ -38,10 +40,11 @@ public class JwtFilter implements WebFilter {
             Claims claims = jwtService.extractClaims(token);
 
             Long userId = claims.get("userId", Long.class);
-            String role = claims.get("role", String.class);
+            // authservice issues roles as a list claim, e.g. "roles": ["DRIVER"]
+            List<String> roles = jwtService.extractRoles(token);
 
             Authentication auth =
-                    new JwtAuthenticationToken(userId, role);
+                    new JwtAuthenticationToken(userId, roles);
 
             return chain.filter(exchange)
                     .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));

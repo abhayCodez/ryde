@@ -2,12 +2,16 @@ package com.ryde.notificationservice.config;
 
 import com.ryde.notificationservice.filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 
+// Spring Security 6 no longer meta-annotates @EnableWebFluxSecurity with @Configuration,
+// so without @Configuration this class is never loaded and Boot's default security applies.
+@Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
 
