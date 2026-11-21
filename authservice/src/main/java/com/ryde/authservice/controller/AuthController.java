@@ -57,4 +57,13 @@ public class AuthController {
         authService.logout(request.getRefreshToken(), user);
         return ResponseEntity.ok("Logout Successfull!!!");
     }
+
+    @PostMapping("/logout-all")
+    public ResponseEntity<?> logoutAll(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        authService.logoutAll(user);
+        return ResponseEntity.ok("Logged out of all sessions");
+    }
 }

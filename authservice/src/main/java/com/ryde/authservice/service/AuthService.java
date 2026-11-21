@@ -66,4 +66,10 @@ public class AuthService {
         currentUser.setTokenVersion(currentUser.getTokenVersion() + 1);
         userRepository.save(currentUser);
     }
+
+    public void logoutAll(User currentUser) {
+        refreshTokenService.deleteAllForUser(currentUser.getId());
+        currentUser.setTokenVersion(currentUser.getTokenVersion() + 1);
+        userRepository.save(currentUser);
+    }
 }
