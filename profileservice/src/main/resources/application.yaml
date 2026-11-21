@@ -3,8 +3,8 @@ spring:
     name: profileservice
   datasource:
     url: jdbc:mysql://localhost:3306/profile_db
-    username: root
-    password: password
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -19,7 +19,7 @@ spring:
 application:
   security:
     jwt:
-      secret-key: U9gdFO7BiIYHfohZHgbkkPE5OFoOC93k9GMpNqYk450
+      secret-key: ${JWT_SECRET}
 
 server:
   port: 8082
@@ -29,4 +29,4 @@ auth:
     url: http://localhost:8081
 
 internal:
-  key: FDpj4KY40OdYE2JKabJxWtzyaGWQnmqGchuyewARfPj
+  key: ${INTERNAL_KEY}

@@ -10,7 +10,7 @@ server:
 application:
   security:
     jwt:
-      secret-key: U9gdFO7BiIYHfohZHgbkkPE5OFoOC93k9GMpNqYk450
+      secret-key: ${JWT_SECRET}
 
 internal:
-  key: FDpj4KY40OdYE2JKabJxWtzyaGWQnmqGchuyewARfPj
+  key: ${INTERNAL_KEY}

@@ -1,14 +1,19 @@
 spring:
   application:
     name: realtimeservice
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
 
 application:
   security:
     jwt:
-      secret-key: U9gdFO7BiIYHfohZHgbkkPE5OFoOC93k9GMpNqYk450
+      secret-key: ${JWT_SECRET}
 
 server:
   port: 8083
 
 internal:
-  key: FDpj4KY40OdYE2JKabJxWtzyaGWQnmqGchuyewARfPj
+  key: ${INTERNAL_KEY}
